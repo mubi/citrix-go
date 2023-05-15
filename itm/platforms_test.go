@@ -30,7 +30,7 @@ func TestErrorIssuingPostOnCreatePlatform(t *testing.T) {
 	if platform != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Post https://itm.cloud.com:443/api/v2/config/platforms.json: foo"
+	expectedError := `Post "https://itm.cloud.com:443/api/v2/config/platforms.json": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -58,7 +58,7 @@ func TestErrorIssuingPutOnUpdatePlatform(t *testing.T) {
 	if platform != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Put https://itm.cloud.com:443/api/v2/config/platforms.json/123: foo"
+	expectedError := `Put "https://itm.cloud.com:443/api/v2/config/platforms.json/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -77,7 +77,7 @@ func TestErrorIssuingGetPlatform(t *testing.T) {
 	if platform != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Get https://itm.cloud.com:443/api/v2/config/platforms.json/123: foo"
+	expectedError := `Get "https://itm.cloud.com:443/api/v2/config/platforms.json/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -109,7 +109,7 @@ func TestPlatformCreate(t *testing.T) {
 		if err != nil {
 			t.Fatalf("JSON decoding error: %v", err)
 		}
-		if !reflect.DeepEqual(expectedRequestData, parsedBody) {
+		if !compareMaps(expectedRequestData, parsedBody) {
 			t.Error(unexpectedValueString("Request body", expectedRequestData, parsedBody))
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -165,6 +165,7 @@ func TestPlatformUpdate(t *testing.T) {
 		responseBodyObj := Platform{
 			Id:          123,
 			DisplayName: "updated_foo_name",
+			Name:        "updated_foo_name",
 			Category:    category,
 			RadarOpts:   radar,
 			Description: "updated foo description",
@@ -173,7 +174,7 @@ func TestPlatformUpdate(t *testing.T) {
 		if err != nil {
 			t.Fatalf("JSON decoding error: %v", err)
 		}
-		if !reflect.DeepEqual(expectedRequestData, parsedBody) {
+		if !compareMaps(expectedRequestData, parsedBody) {
 			t.Error(unexpectedValueString("Request body", expectedRequestData, parsedBody))
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -181,14 +182,14 @@ func TestPlatformUpdate(t *testing.T) {
 		responseBody, _ := json.Marshal(responseBodyObj)
 		fmt.Fprint(w, string(responseBody))
 	})
-	createOps := PlatformOpts{
+	updateOps := PlatformOpts{
 		Name:        "updated_foo_name",
 		DisplayName: "updated_foo_name",
 		Category:    category,
 		RadarOpts:   radar,
 		Description: "updated foo description",
 	}
-	platform, err := client.Platform.Update(123, &createOps)
+	platform, err := client.Platform.Update(123, &updateOps)
 	if err != nil {
 		t.Error(err)
 	}
@@ -221,6 +222,7 @@ func TestPlatformGet(t *testing.T) {
 		responseBodyObj := Platform{
 			Id:          123,
 			DisplayName: "foo",
+			Name:        "foo",
 			Category:    category,
 			RadarOpts:   radar,
 			Description: "foo description",
