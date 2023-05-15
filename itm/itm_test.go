@@ -159,3 +159,37 @@ func TestUserAgentStringOnRequest(t *testing.T) {
 		}
 	}
 }
+
+func compareMaps(expectedMap, receivedMap map[string]interface{}) bool {
+	for key, expectedValue := range expectedMap {
+
+		receivedValue, ok := receivedMap[key]
+		if !ok {
+			return false // Key not found in receivedMap
+		}
+
+		switch expectedValue.(type) {
+		case map[string]interface{}:
+			// Recursively compare nested maps
+			expectedValueNested, ok := expectedValue.(map[string]interface{})
+			if !ok {
+				return false // issue
+			}
+			receivedValueNested, ok := receivedValue.(map[string]interface{})
+			if !ok {
+				return false // Type mismatch
+			}
+			if !compareMaps(expectedValueNested, receivedValueNested) {
+				return false // Nested maps not equal
+			}
+		default:
+			// Compare non-map values
+			if expectedValue != receivedValue {
+				return false // Values not equal
+
+			}
+		}
+	}
+
+	return true
+}

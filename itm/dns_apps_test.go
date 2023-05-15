@@ -51,7 +51,7 @@ func TestErrorIssuingPostOnCreateDNSApps(t *testing.T) {
 	if app != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Post https://itm.cloud.com:443/api/v2/config/applications/dns.json?publish=false: foo"
+	expectedError := `Post "https://itm.cloud.com:443/api/v2/config/applications/dns.json?publish=false": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -76,7 +76,7 @@ func TestErrorIssuingPutOnUpdateDNSApps(t *testing.T) {
 	if app != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Put https://itm.cloud.com:443/api/v2/config/applications/dns.json/123?publish=true: foo"
+	expectedError := `Put "https://itm.cloud.com:443/api/v2/config/applications/dns.json/123?publish=true": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -95,7 +95,7 @@ func TestErrorIssuingGetDNSApps(t *testing.T) {
 	if app != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Get https://itm.cloud.com:443/api/v2/config/applications/dns.json/123: foo"
+	expectedError := `Get "https://itm.cloud.com:443/api/v2/config/applications/dns.json/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}

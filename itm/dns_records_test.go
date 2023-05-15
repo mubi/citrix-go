@@ -23,7 +23,7 @@ func TestErrorIssuingPostOnCreateDNSRecord(t *testing.T) {
 	if record != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Post https://itm.cloud.com:443/api/v2/config/authdns.json/record: foo"
+	expectedError := `Post "https://itm.cloud.com:443/api/v2/config/authdns.json/record": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -43,7 +43,7 @@ func TestErrorIssuingPutOnUpdateDNSRecord(t *testing.T) {
 	if record != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Put https://itm.cloud.com:443/api/v2/config/authdns.json/record/123: foo"
+	expectedError := `Put "https://itm.cloud.com:443/api/v2/config/authdns.json/record/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -62,7 +62,7 @@ func TestErrorIssuingGetDNSRecord(t *testing.T) {
 	if record != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Get https://itm.cloud.com:443/api/v2/config/authdns.json/record/123: foo"
+	expectedError := `Get "https://itm.cloud.com:443/api/v2/config/authdns.json/record/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}

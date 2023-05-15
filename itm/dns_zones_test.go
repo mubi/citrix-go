@@ -22,7 +22,7 @@ func TestErrorIssuingPostOnCreateDNSZone(t *testing.T) {
 	if zone != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Post https://itm.cloud.com:443/api/v2/config/authdns.json: foo"
+	expectedError := `Post "https://itm.cloud.com:443/api/v2/config/authdns.json": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -42,7 +42,7 @@ func TestErrorIssuingPutOnUpdateDNSZone(t *testing.T) {
 	if zone != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Put https://itm.cloud.com:443/api/v2/config/authdns.json/123: foo"
+	expectedError := `Put "https://itm.cloud.com:443/api/v2/config/authdns.json/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
@@ -61,7 +61,7 @@ func TestErrorIssuingGetDNSZone(t *testing.T) {
 	if zone != nil {
 		t.Error("Expected nil result")
 	}
-	expectedError := "Get https://itm.cloud.com:443/api/v2/config/authdns.json/123: foo"
+	expectedError := `Get "https://itm.cloud.com:443/api/v2/config/authdns.json/123": foo`
 	if expectedError != err.Error() {
 		t.Errorf("Unexpected error.\nExpected: %s.\nGot: %s", expectedError, err.Error())
 	}
