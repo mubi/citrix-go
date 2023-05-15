@@ -11,6 +11,29 @@ import (
 	"testing"
 )
 
+type fakeRoundTripper struct {
+	resp *http.Response
+	err  error
+}
+
+func (r fakeRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	return r.resp, r.err
+}
+
+type someError struct {
+	errorString string
+}
+
+func (e *someError) Error() string {
+	return e.errorString
+}
+
+func newFakeHTTPClient(transport fakeRoundTripper) *http.Client {
+	return &http.Client{
+		Transport: transport,
+	}
+}
+
 var (
 	mux    *http.ServeMux
 	server *httptest.Server
