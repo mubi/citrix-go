@@ -9,29 +9,6 @@ import (
 	"testing"
 )
 
-type fakeRoundTripper struct {
-	resp *http.Response
-	err  error
-}
-
-func (r fakeRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	return r.resp, r.err
-}
-
-type someError struct {
-	errorString string
-}
-
-func (e *someError) Error() string {
-	return e.errorString
-}
-
-func newFakeHTTPClient(transport fakeRoundTripper) *http.Client {
-	return &http.Client{
-		Transport: transport,
-	}
-}
-
 func TestErrorIssuingPostOnCreateDNSApps(t *testing.T) {
 	var platformList []map[string]interface{}
 	platformInstance := make(map[string]interface{})
