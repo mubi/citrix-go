@@ -11,6 +11,7 @@ import (
 func TestErrorIssuingPostOnCreatePlatform(t *testing.T) {
 	category := map[string]interface{}{"id": float64(1)}
 	radar := map[string]interface{}{"usePublicData": true}
+	sonar := map[string]interface{}{"enabled": false}
 	fakeClient := newFakeHTTPClient(
 		fakeRoundTripper{
 			resp: nil,
@@ -24,6 +25,7 @@ func TestErrorIssuingPostOnCreatePlatform(t *testing.T) {
 		DisplayName: "foo",
 		Category:    category,
 		RadarOpts:   radar,
+		SonarOpts:   sonar,
 		Description: "foo description",
 	}
 	platform, err := Client.Platform.Create(&createOps)
@@ -39,6 +41,7 @@ func TestErrorIssuingPostOnCreatePlatform(t *testing.T) {
 func TestErrorIssuingPutOnUpdatePlatform(t *testing.T) {
 	category := map[string]interface{}{"id": float64(1)}
 	radar := map[string]interface{}{"usePublicData": true}
+	sonar := map[string]interface{}{"enabled": false}
 	fakeClient := newFakeHTTPClient(
 		fakeRoundTripper{
 			resp: nil,
@@ -52,6 +55,7 @@ func TestErrorIssuingPutOnUpdatePlatform(t *testing.T) {
 		DisplayName: "foo",
 		Category:    category,
 		RadarOpts:   radar,
+		SonarOpts:   sonar,
 		Description: "foo description",
 	}
 	platform, err := Client.Platform.Update(123, &updateOpts)
@@ -88,6 +92,7 @@ func TestPlatformCreate(t *testing.T) {
 	defer teardown()
 	category := map[string]interface{}{"id": float64(1)}
 	radar := map[string]interface{}{"usePublicData": true}
+	sonar := map[string]interface{}{"enabled": false}
 	mux.HandleFunc("/v2/config/platforms.json", func(w http.ResponseWriter, r *http.Request) {
 		var parsedBody map[string]interface{}
 		expectedRequestData := map[string]interface{}{
@@ -95,6 +100,7 @@ func TestPlatformCreate(t *testing.T) {
 			"displayName": "foo",
 			"category":    category,
 			"radarConfig": radar,
+			"sonarConfig": sonar,
 			"intendedUse": "foo description",
 		}
 		responseBodyObj := Platform{
@@ -103,6 +109,7 @@ func TestPlatformCreate(t *testing.T) {
 			DisplayName: "foo",
 			Category:    category,
 			RadarOpts:   radar,
+			SonarOpts:   sonar,
 			Description: "foo description",
 		}
 		err := json.NewDecoder(r.Body).Decode(&parsedBody)
@@ -122,6 +129,7 @@ func TestPlatformCreate(t *testing.T) {
 		DisplayName: "foo",
 		Category:    category,
 		RadarOpts:   radar,
+		SonarOpts:   sonar,
 		Description: "foo description",
 	}
 	platform, err := client.Platform.Create(&createOps)
@@ -143,6 +151,9 @@ func TestPlatformCreate(t *testing.T) {
 	if op := reflect.DeepEqual(radar, platform.RadarOpts); !op {
 		t.Error(unexpectedValueString("platform radar options", radar, platform.RadarOpts))
 	}
+	if op := reflect.DeepEqual(sonar, platform.SonarOpts); !op {
+		t.Error(unexpectedValueString("platform sonar options", sonar, platform.SonarOpts))
+	}
 	if err := testValues("description", "foo description", platform.Description); err != nil {
 		t.Error(err)
 	}
@@ -153,6 +164,7 @@ func TestPlatformUpdate(t *testing.T) {
 	defer teardown()
 	category := map[string]interface{}{"id": float64(1)}
 	radar := map[string]interface{}{"usePublicData": true}
+	sonar := map[string]interface{}{"enabled": false}
 	mux.HandleFunc("/v2/config/platforms.json/123", func(w http.ResponseWriter, r *http.Request) {
 		var parsedBody map[string]interface{}
 		expectedRequestData := map[string]interface{}{
@@ -160,6 +172,7 @@ func TestPlatformUpdate(t *testing.T) {
 			"displayName": "updated_foo_name",
 			"category":    category,
 			"radarConfig": radar,
+			"sonarConfig": sonar,
 			"intendedUse": "updated foo description",
 		}
 		responseBodyObj := Platform{
@@ -168,6 +181,7 @@ func TestPlatformUpdate(t *testing.T) {
 			Name:        "updated_foo_name",
 			Category:    category,
 			RadarOpts:   radar,
+			SonarOpts:   sonar,
 			Description: "updated foo description",
 		}
 		err := json.NewDecoder(r.Body).Decode(&parsedBody)
@@ -187,6 +201,7 @@ func TestPlatformUpdate(t *testing.T) {
 		DisplayName: "updated_foo_name",
 		Category:    category,
 		RadarOpts:   radar,
+		SonarOpts:   sonar,
 		Description: "updated foo description",
 	}
 	platform, err := client.Platform.Update(123, &updateOps)
@@ -208,6 +223,9 @@ func TestPlatformUpdate(t *testing.T) {
 	if op := reflect.DeepEqual(radar, platform.RadarOpts); !op {
 		t.Error(unexpectedValueString("platform radar options", radar, platform.RadarOpts))
 	}
+	if op := reflect.DeepEqual(sonar, platform.SonarOpts); !op {
+		t.Error(unexpectedValueString("platform sonar options", sonar, platform.SonarOpts))
+	}
 	if err := testValues("description", "updated foo description", platform.Description); err != nil {
 		t.Error(err)
 	}
@@ -218,6 +236,7 @@ func TestPlatformGet(t *testing.T) {
 	defer teardown()
 	category := map[string]interface{}{"id": float64(1)}
 	radar := map[string]interface{}{"usePublicData": true}
+	sonar := map[string]interface{}{"enabled": false}
 	mux.HandleFunc("/v2/config/platforms.json/123", func(w http.ResponseWriter, r *http.Request) {
 		responseBodyObj := Platform{
 			Id:          123,
@@ -225,6 +244,7 @@ func TestPlatformGet(t *testing.T) {
 			Name:        "foo",
 			Category:    category,
 			RadarOpts:   radar,
+			SonarOpts:   sonar,
 			Description: "foo description",
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -251,6 +271,9 @@ func TestPlatformGet(t *testing.T) {
 	if op := reflect.DeepEqual(radar, platform.RadarOpts); !op {
 		t.Error(unexpectedValueString("platform radar options", radar, platform.RadarOpts))
 	}
+	if op := reflect.DeepEqual(sonar, platform.SonarOpts); !op {
+		t.Error(unexpectedValueString("platform sonar options", sonar, platform.SonarOpts))
+	}
 	if err := testValues("description", "foo description", platform.Description); err != nil {
 		t.Error(err)
 	}
@@ -273,6 +296,7 @@ func TestPlatformList(t *testing.T) {
 	defer teardown()
 	category := map[string]interface{}{"id": float64(1)}
 	radar := map[string]interface{}{"usePublicData": true}
+	sonar := map[string]interface{}{"enabled": false}
 	var plaforms []Platform
 	platform1 := Platform{
 		Id:          123,
@@ -280,6 +304,7 @@ func TestPlatformList(t *testing.T) {
 		DisplayName: "foo",
 		Category:    category,
 		RadarOpts:   radar,
+		SonarOpts:   sonar,
 		Description: "foo description",
 	}
 	platform2 := Platform{
@@ -288,6 +313,7 @@ func TestPlatformList(t *testing.T) {
 		DisplayName: "bar",
 		Category:    category,
 		RadarOpts:   radar,
+		SonarOpts:   sonar,
 		Description: "bar description",
 	}
 
