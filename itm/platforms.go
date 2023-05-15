@@ -14,6 +14,7 @@ type PlatformOpts struct {
 	DisplayName               string                 `json:"displayName"`
 	Category                  map[string]interface{} `json:"category"`
 	RadarOpts                 map[string]interface{} `json:"radarConfig"`
+	SonarOpts                 map[string]interface{} `json:"sonarConfig"`
 	Description               string                 `json:"intendedUse"`
 	Enabled                   bool                   `json:"enabled"`
 	OpenMixEnabled            bool                   `json:"openmixEnabled"`
@@ -29,6 +30,7 @@ type Platform struct {
 	DisplayName               string                 `json:"displayName"`
 	Category                  map[string]interface{} `json:"category"`
 	RadarOpts                 map[string]interface{} `json:"radarConfig"`
+	SonarOpts                 map[string]interface{} `json:"sonarConfig"`
 	Description               string                 `json:"intendedUse"`
 	Enabled                   bool                   `json:"enabled"`
 	OpenMixEnabled            bool                   `bool:"openmixEnabled"`
